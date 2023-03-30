@@ -1,0 +1,47 @@
+<div class="topnav-dropdown-wrapper nav-bar-support">
+    <a href="#" target="_blank" title="Filtros">
+        <tg-svg svg-icon="icon-filters">
+                <svg class="icon icon-filters">
+                    <use xlink:href="#icon-filters" href="#icon-filters">
+                </use>
+            </svg>
+        </tg-svg>
+    </a>
+    <div class="navbar-dropdown navigation-help">
+        <ul>
+            <li>
+                <a href="#" class="secondary">
+                    <tg-svg svg-icon="icon-user">
+                        <svg class="icon icon-user">
+                            <use xlink:href="#icon-user" href="#icon-user">
+                            </use>
+                        </svg>
+                    </tg-svg>
+                    <span>Alan Pinheiro Brito</span>
+                </a>
+            </li>
+        </ul>
+    </div>
+</div>
+
+
+
+<a href="#" target="_blank" title="Filtros">
+    <tg-svg svg-icon="icon-filters">
+        <svg class="icon icon-filters">
+            <use xlink:href="#icon-filters" href="#icon-filters"></use>
+        </svg>
+    </tg-svg>
+</a>
+
+
+<a 
+    tg-nav="filter" ng-class="{'active': vm.active == 'filter' }" data-savepage-href="#"
+    href="#" target="_blank" title="Filtros"
+>
+    <tg-svg svg-icon="icon-filters">
+        <svg class="icon icon-filters">
+            <use xlink:href="#icon-filters" href="#icon-filters"></use>
+        </svg>
+    </tg-svg>
+</a>
