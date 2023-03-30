@@ -1,11 +1,11 @@
 {
-  "name": "chrome-extension-boilerplate-react",
-  "version": "5.0.4",
-  "description": "A chrome extension boilerplate built with React 18, Webpack 5, and Webpack Dev Server 4",
+  "name": "scrum-tasks-filter-for-taiga",
+  "version": "0.0.1",
+  "description": "Add the option to filter by scrum tasks in Taiga",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/lxieyang/chrome-extension-boilerplate-react.git"
+    "url": "https://github.com/arthuraraujo/scrum-tasks-filter-for-taiga.git"
   },
   "scripts": {
     "build": "node utils/build.js",
