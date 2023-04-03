@@ -64,6 +64,31 @@ function removeFilterIfItExists() {
 }
 
 // ////////////////////////////////////////////////////////////////////////////////////////////
+// Add Epic Name to Taskboard
+// ////////////////////////////////////////////////////////////////////////////////////////////
+function addEpicName() {
+  const taskboardRows = document.querySelectorAll('.taskboard-row');
+
+  taskboardRows.forEach((row) => {
+    const taskboardRowHeader = row.querySelector('div.taskboard-us');
+
+    const epicPill = row.querySelector('div.belong-to-epic-pill');
+    const epicPillTitle = epicPill?.getAttribute('title') || null;
+    if (!epicPillTitle) return;
+
+    const epicHeader = document.createElement('h3');
+    epicHeader.textContent = epicPillTitle.replace(/^#\d+\s/, '');
+    epicHeader.style.backgroundColor = '#434456';
+    epicHeader.style.color = '#ffffff';
+    epicHeader.style.textAlign = 'center';
+    epicHeader.style.width = '190px';
+    epicHeader.style.marginBottom = '5px';
+
+    taskboardRowHeader.insertBefore(epicHeader, taskboardRowHeader.firstChild);
+  });
+}
+
+// ////////////////////////////////////////////////////////////////////////////////////////////
 // Hide elements from Taskboard (TaskboardRows and cards)
 // ////////////////////////////////////////////////////////////////////////////////////////////
 function hideTaskboardRows(userName) {
@@ -233,6 +258,7 @@ function addFilterIfInTaskboard() {
     if (isInTaskboard()) {
       const usersWithTasks = getUsersWithTasks();
       createTopNavDropdown(usersWithTasks);
+      addEpicName();
     } else {
       removeFilterIfItExists();
     }
