@@ -103,32 +103,27 @@ function hideTaskCards(userName) {
 // Get TaskboardUsers and return an array of objects with name and src
 // ////////////////////////////////////////////////////////////////////////////////////////////
 function getUsersWithTasks() {
-  try {
-    const uniqueUserNames = new Set();
-    const cardUserAvatars = document.querySelectorAll('.card-user-avatar img');
-    cardUserAvatars.forEach((avatar) => {
-      const title = avatar.getAttribute('title');
-      const src = avatar.getAttribute('src');
-      const backgroundColor = avatar.style?.backgroundColor || 'rgb(0,0,0)';
-      uniqueUserNames.add(`${title} |  
-    ${src} | ${backgroundColor}`);
-    });
+  const uniqueUserNames = new Set();
+  const cardUserAvatars = document.querySelectorAll('.card-user-avatar img');
+  cardUserAvatars.forEach((avatar) => {
+    const title = avatar.getAttribute('title');
+    // const dataSavepageSrc = avatar.getAttribute('data-savepage-src');
+    const src = avatar.getAttribute('src');
+    uniqueUserNames.add(`${title},  
+    ${src}`);
 
-    console.log(`uniqueUserNames: ${uniqueUserNames}`);
-    const sortedUniqueNames = Array.from(uniqueUserNames).sort();
-    const usersArrayOfObjects = sortedUniqueNames.map((user) => {
-      console.log(`user: ${user}`);
-      const usersArray = user.split('|');
-      return {
-        name: usersArray[0],
-        src: usersArray[1],
-        backgroundColor: usersArray[2],
-      };
-    });
-    return usersArrayOfObjects;
-  } catch (e) {
-    console.log('e1', e);
-  }
+    uniqueUserNames.add(`${title},  
+    ${src}`);
+  });
+  const sortedUniqueNames = Array.from(uniqueUserNames).sort();
+  const usersArrayOfObjects = sortedUniqueNames.map((user) => {
+    const usersArray = user.split(',');
+    return {
+      name: usersArray[0],
+      src: usersArray[1],
+    };
+  });
+  return usersArrayOfObjects;
 }
 
 // ////////////////////////////////////////////////////////////////////////////////////////////
@@ -204,20 +199,13 @@ function createTopNavDropdown(usersArrayOfObjects) {
     li.appendChild(userLink);
 
     const avatar = document.createElement('img');
-    try {
-      if (userObject.backgroundColor) {
-        avatar.style.backgroundColor = userObject.backgroundColor;
-      }
-    } catch (e) {
-      console.log('e2', e);
-    }
+    // avatar.setAttribute('data-savepage-src', userObject.dataSavepageSrc);
     avatar.src = userObject.src;
     avatar.style.width = '40px';
     avatar.style.height = '40px';
     avatar.style.borderRadius = '50%';
     avatar.style.marginRight = '10px';
     avatar.style.objectFit = 'cover';
-
     userLink.appendChild(avatar);
 
     const usernameSpan = document.createElement('span');
