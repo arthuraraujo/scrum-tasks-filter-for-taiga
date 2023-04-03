@@ -120,7 +120,6 @@ function getUsersWithTasks() {
       src: parts[1].trim(),
       backgroundColor: parts[2].trim(),
     };
-    console.log({ obj });
     return obj;
   });
   return usersArrayOfObjects;
@@ -200,8 +199,6 @@ function createTopNavDropdown(usersArrayOfObjects) {
 
     const avatar = document.createElement('img');
     // avatar.setAttribute('data-savepage-src', userObject.dataSavepageSrc);
-
-    console.log({ userObject });
     avatar.src = userObject.src;
     avatar.style.backgroundColor = userObject.backgroundColor;
     avatar.style.width = '40px';
