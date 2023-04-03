@@ -107,21 +107,21 @@ function getUsersWithTasks() {
   const cardUserAvatars = document.querySelectorAll('.card-user-avatar img');
   cardUserAvatars.forEach((avatar) => {
     const title = avatar.getAttribute('title');
-    // const dataSavepageSrc = avatar.getAttribute('data-savepage-src');
     const src = avatar.getAttribute('src');
-    uniqueUserNames.add(`${title},  
-    ${src}`);
-
-    uniqueUserNames.add(`${title},  
-    ${src}`);
+    const backgroundColor = avatar.style?.backgroundColor || 'rgb(0,0,0)';
+    uniqueUserNames.add(`${title} |  
+    ${src} |  ${backgroundColor}`);
   });
   const sortedUniqueNames = Array.from(uniqueUserNames).sort();
   const usersArrayOfObjects = sortedUniqueNames.map((user) => {
-    const usersArray = user.split(',');
-    return {
-      name: usersArray[0],
-      src: usersArray[1],
+    const parts = user.split('|');
+    const obj = {
+      name: parts[0].trim(),
+      src: parts[1].trim(),
+      backgroundColor: parts[2].trim(),
     };
+    console.log({ obj });
+    return obj;
   });
   return usersArrayOfObjects;
 }
@@ -200,7 +200,10 @@ function createTopNavDropdown(usersArrayOfObjects) {
 
     const avatar = document.createElement('img');
     // avatar.setAttribute('data-savepage-src', userObject.dataSavepageSrc);
+
+    console.log({ userObject });
     avatar.src = userObject.src;
+    avatar.style.backgroundColor = userObject.backgroundColor;
     avatar.style.width = '40px';
     avatar.style.height = '40px';
     avatar.style.borderRadius = '50%';
