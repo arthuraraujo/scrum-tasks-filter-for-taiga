@@ -3,25 +3,12 @@
   "name": "Scrum Tasks Filter for Taiga",
   "description": "Add the option to filter by scrum tasks in Taiga",
   "options_page": "options.html",
-  "background": { "service_worker": "background.bundle.js" },
-  "action": {
-    "default_popup": "popup.html",
-    "default_icon": "icon-34.png"
-  },
-  "chrome_url_overrides": {
-    "newtab": "newtab.html"
-  },
   "icons": {
     "128": "icon-128.png"
   },
   "content_scripts": [
     {
-      "matches": [
-        "http://localhost/*",
-        "http://10.111.32.59/*",
-        "https://10.111.32.59/*",
-        "<all_urls>"
-      ],
+      "matches": ["http://*/*", "https://*/*", "<all_urls>"],
       "js": ["contentScript.bundle.js"],
       "css": ["content.styles.css"]
     }
