@@ -42,6 +42,11 @@ function isInTaskboard() {
   return !!taskboardSection;
 }
 
+function isInEpicsPage() {
+  const taskboardSection = document.querySelector('section.main.epics');
+  return !!taskboardSection;
+}
+
 function navExists() {
   const navRight = document.querySelector('.nav-right');
   return !!navRight;
@@ -66,11 +71,17 @@ function removeFilterIfItExists() {
 // ////////////////////////////////////////////////////////////////////////////////////////////
 // Add Epic Name to Taskboard
 // ////////////////////////////////////////////////////////////////////////////////////////////
-function addEpicName() {
+function addEpicNameIfIsInScrumTasksPage() {
+  if(isInEpicsPage()){
+    return null
+  } 
   const taskboardRows = document.querySelectorAll('.taskboard-row');
 
   taskboardRows.forEach((row) => {
     const taskboardRowHeader = row.querySelector('div.taskboard-us');
+
+    const titleAlreadyExists = row.querySelector('h3.epic-header');
+    if (titleAlreadyExists) return;
 
     const epicPill = row.querySelector('div.belong-to-epic-pill');
     const epicPillTitle = epicPill?.getAttribute('title') || null;
@@ -83,6 +94,7 @@ function addEpicName() {
     epicHeader.style.textAlign = 'center';
     epicHeader.style.width = '190px';
     epicHeader.style.marginBottom = '5px';
+    epicHeader.classList.add('epic-header');
 
     taskboardRowHeader.insertBefore(epicHeader, taskboardRowHeader.firstChild);
   });
@@ -123,13 +135,34 @@ function hideTaskCards(userName) {
     }
   });
 }
+function hideEpicsRows(userName) {
+  const taskboardRows = document.querySelectorAll('.epics-table-body-row');
+
+  taskboardRows.forEach((row) => {
+    row.style.display = 'block';
+    if (!userName) {
+      return;
+    }
+    const hasEpicsAssignedToSelectedUser = row.querySelector(
+      `img[title="${userName}"]`
+    );
+    if (!hasEpicsAssignedToSelectedUser) {
+      row.style.display = 'none';
+    }
+  });
+}
+
 
 // ////////////////////////////////////////////////////////////////////////////////////////////
-// Get TaskboardUsers and return an array of objects with name and src
+// Return an array of objects with name and src
 // ////////////////////////////////////////////////////////////////////////////////////////////
-function getUsersWithTasks() {
+function getUsers(pageType) {
+  // pageTypes:'epic' || 'taskboard'
+  const avatarSelectorOnScrumPage = '.card-user-avatar img'
+  const avatarSelectorOnEpicsPage = '.epics-table-body > div .assigned > img'
+  const avatarSelector = pageType === 'epics' ? avatarSelectorOnEpicsPage : avatarSelectorOnScrumPage
   const uniqueUserNames = new Set();
-  const cardUserAvatars = document.querySelectorAll('.card-user-avatar img');
+  const cardUserAvatars = document.querySelectorAll(avatarSelector);
   cardUserAvatars.forEach((avatar) => {
     const title = avatar.getAttribute('title');
     const src = avatar.getAttribute('src');
@@ -148,6 +181,64 @@ function getUsersWithTasks() {
     return obj;
   });
   return usersArrayOfObjects;
+}
+
+// ////////////////////////////////////////////////////////////////////////////////////////////
+// Get EpicUsers and return an array of objects with name and src
+// ////////////////////////////////////////////////////////////////////////////////////////////
+function getUsersWithEpics() {
+  const usersArray = getUsers('epics')
+  return usersArray;
+}
+
+
+// ////////////////////////////////////////////////////////////////////////////////////////////
+// Get TaskboardUsers and return an array of objects with name and src
+// ////////////////////////////////////////////////////////////////////////////////////////////
+function getUsersWithScrumTasks() {
+  const usersArray = getUsers('taskboard')
+  return usersArray;
+}
+
+// ////////////////////////////////////////////////////////////////////////////////////////////
+// Get TaskboardUsers and return an array of objects with name and src
+// ////////////////////////////////////////////////////////////////////////////////////////////
+function getUsersWithTasks() {
+  if(!isInTaskboard() && !isInEpicsPage()){
+    return null
+  }
+  const usersArray = isInTaskboard() ? getUsersWithScrumTasks() : getUsersWithEpics()
+  return usersArray;
+}
+
+// ////////////////////////////////////////////////////////////////////////////////////////////
+// 
+// ////////////////////////////////////////////////////////////////////////////////////////////
+function handleClickOnScrumTasksPage(userName) {
+  hideTaskboardRows(userName);
+  hideTaskCards(userName);
+}
+
+// ////////////////////////////////////////////////////////////////////////////////////////////
+// 
+// ////////////////////////////////////////////////////////////////////////////////////////////
+function handleClickOnEpicsPage(userName) {
+  hideEpicsRows(userName);
+}
+
+// ////////////////////////////////////////////////////////////////////////////////////////////
+// 
+// ////////////////////////////////////////////////////////////////////////////////////////////
+function handleClick(userName) {
+  if(isInTaskboard()){
+    handleClickOnScrumTasksPage(userName)
+  }
+  else if(isInEpicsPage()){
+    handleClickOnEpicsPage(userName)
+  }
+  else{
+    console.log('Página não identificada')
+  }
 }
 
 // ////////////////////////////////////////////////////////////////////////////////////////////
@@ -187,8 +278,7 @@ function createTopNavDropdown(usersArrayOfObjects) {
     userLink.className = 'secondary';
     userLink.onclick = function (e) {
       e.preventDefault();
-      hideTaskboardRows();
-      hideTaskCards();
+      handleClick()
       return false;
     };
     li.appendChild(userLink);
@@ -216,8 +306,7 @@ function createTopNavDropdown(usersArrayOfObjects) {
     userLink.className = 'secondary';
     userLink.onclick = function (e) {
       e.preventDefault();
-      hideTaskboardRows(userObject.name);
-      hideTaskCards(userObject.name);
+      handleClick(userObject.name)
       return false;
     };
     li.appendChild(userLink);
@@ -255,10 +344,10 @@ function createTopNavDropdown(usersArrayOfObjects) {
 // ////////////////////////////////////////////////////////////////////////////////////////////
 function addFilterIfInTaskboard() {
   if (isTAIGA() && !isLoading() && navExists()) {
-    if (isInTaskboard()) {
+    if (isInTaskboard() || isInEpicsPage()) { 
       const usersWithTasks = getUsersWithTasks();
       createTopNavDropdown(usersWithTasks);
-      addEpicName();
+      addEpicNameIfIsInScrumTasksPage();
     } else {
       removeFilterIfItExists();
     }
